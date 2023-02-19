@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     pinia: "/node_modules/@pinia/nuxt/node_modules/pinia/dist/pinia.mjs"
   },
   runtimeConfig: {
+    MICROCMS_URL: process.env.MICROCMS_URL,
     TO_DO_URL: process.env.TO_DO_URL,
     MEMBERS_URL: process.env.MEMBERS_URL,
     FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || '',
@@ -23,6 +24,7 @@ export default defineNuxtConfig({
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || '',
     MICROCMS_KEY: process.env.MICROCMS_KEY || '',
     public: {
+      MICROCMS_URL: process.env.MICROCMS_URL,
       TO_DO_URL: process.env.TO_DO_URL,
       MEMBERS_URL: process.env.MEMBERS_URL,
       FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || '',

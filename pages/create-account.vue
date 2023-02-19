@@ -33,11 +33,17 @@
 <script setup lang="ts">
 import { ref } from "vue"
 const { signUp } = useAuth()
-const emailValue = ref()
-const nameValue = ref()
-const passwordValue = ref()
+const emailValue = ref<string>('')
+const nameValue = ref<string>('')
+const passwordValue = ref<string>('')
 definePageMeta({
   layout: false
+})
+useHead({
+  title: 'Create Account | MEMO',
+  meta: [
+    { name: 'description', content: 'This page displays a list of memos.'}
+  ]
 })
 </script>
 <style lang="scss">

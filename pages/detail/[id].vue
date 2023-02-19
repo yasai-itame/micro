@@ -18,18 +18,25 @@ const config = useRuntimeConfig()
 const route = useRoute()
 const { $dayjs } = useNuxtApp()
 const { id } = route.params
+definePageMeta({
+  middleware: ['auth']
+})
+
+const apiUrl = config.TO_DO_URL
+const headers = {
+  'Content-Type': 'application/json',
+  'X-MICROCMS-API-KEY': config.MICROCMS_KEY
+}
+
+let now = new Date()
+
 const { data: results, pending, error, refresh } = await useAsyncData(
-  'mountains',
-  () => $fetch(`https://8jutswr0k6.microcms.io/api/v1/to-do/${id}`, {
+  String(now.getTime()),
+  () => $fetch(`${apiUrl}/${id}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-MICROCMS-API-KEY': config.MICROCMS_KEY
-    }
+    headers: headers
   })
 )
-console.log(results.value)
-console.log(results.value.contents)
 
 const author = ref<string>('')
 const title = ref<string>('')
@@ -44,8 +51,12 @@ title.value = results.value.title
 createdAt.value = dateAction(results.value.createdAt)
 updatedAt.value = dateAction(results.value.updatedAt)
 contents.value = results.value.contents
-definePageMeta({
-  middleware: ['auth']
+
+useHead({
+  title: `${title.value} | MEMO`,
+  meta: [
+    { name: 'description', content: 'You can see the details of the memo on this page.'}
+  ]
 })
 </script>
 <style lang="scss">

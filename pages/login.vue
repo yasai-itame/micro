@@ -40,6 +40,13 @@ const { signIn } = useAuth()
 definePageMeta({
   layout: false
 })
+
+useHead({
+  title: 'Login | MEMO',
+  meta: [
+    { name: 'description', content: 'This is the login page.'}
+  ]
+})
 </script>
 <style lang="scss">
 .hero.is-success {

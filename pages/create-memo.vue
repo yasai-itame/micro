@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="control">
-        <button class="button is-link is-fullwidth has-text-weight-medium is-medium">Send Memo</button>
+        <button class="button is-link is-fullwidth has-text-weight-medium is-medium">Submit Memo</button>
       </div>
     </form>
   </div>
@@ -24,10 +24,23 @@ import { ref, onMounted } from "vue"
 definePageMeta({
   middleware: ['auth']
 })
+useHead({
+  title: 'Create Memo | MEMO',
+  meta: [
+    { name: 'description', content: 'This page allows you to make notes.'}
+  ]
+})
 const config = useRuntimeConfig()
 const title = ref<string>('')
 const memo = ref<string>('')
 const loginName = ref<string>('')
+
+const headers = {
+  'Content-Type': 'application/json',
+  'X-MICROCMS-API-KEY': config.MICROCMS_KEY
+}
+
+let now = new Date()
 
 const apiUrl = config.TO_DO_URL
 
@@ -39,13 +52,10 @@ const submitMemo = async (title: string, memo: string) => {
       return false
     }
     const {data, error} = await useAsyncData(
-      'mountains',
+      String(now.getTime()),
       () => $fetch(apiUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-MICROCMS-API-KEY': config.MICROCMS_KEY
-        },
+        headers: headers,
         body: {
           'author': loginName.value,
           'title': title,

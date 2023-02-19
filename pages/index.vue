@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="box content mt-5">
-    <article v-for="list in lists" :key="list.id" class="post">
+    <article v-for="(list, index) in lists" :key="list.id" class="post">
       <h4>
         <NuxtLink :to="`/detail/${list.id}`">{{list.title}}</NuxtLink>
       </h4>
@@ -36,7 +36,7 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <span>author:</span> <a @click="searchAction(list.author, 'author')">{{list.author}}</a> <span>create date:</span> {{dateAction(list.createdAt)}} &nbsp; <span class="tag">Question</span>
+              <span>author:</span> <a @click="searchAction(list.author, 'author')">{{list.author}}</a> <span>create date:</span> {{dateAction(list.createdAt)}} &nbsp; <button @click="deleteAction(list.id, index)" class="button is-small is-danger" :disabled="disabledCheck(list.author)">Delete</button>
             </p>
           </div>
         </div>
@@ -65,6 +65,13 @@ definePageMeta({
   middleware: ['auth']
 })
 
+useHead({
+  title: 'MEMO',
+  meta: [
+    { name: 'description', content: 'This page displays a list of memos.'}
+  ]
+})
+
 const dateAction = (date: string):string => {
   return $dayjs(date).format('YYYY.MM.DD')
 }
@@ -85,8 +92,10 @@ const params = {
   offset: pager.value
 }
 
+let now = new Date()
+
 const { data: list, error } = await useAsyncData(
-  'mountains',
+  String(now.getTime()),
   () => $fetch(apiUrl, {
     method: 'GET',
     headers: headers,
@@ -112,7 +121,6 @@ let loadingStyle = {
   'justify-content': 'center',
   'padding': '40px 0 0'
 }
-let now = new Date()
 
 const searchKeyword = ref<string>('')
 
@@ -210,6 +218,31 @@ const allAction = async () => {
   if (error.value != null) {
     alert('エラーにより読み込みできませんでした。')
   }
+}
+
+const deleteAction = async (id: string, index: number) => {
+  let check = confirm('削除します。\nよろしいでしょうか。')
+  if (check) {
+    const {data, error} = await useAsyncData(
+      String(now.getTime()),
+      () => $fetch(`${apiUrl}/${id}`, {
+        method: 'DELETE',
+        headers: headers
+      })
+    )
+    if (data.value != null) {
+      alert('削除が完了いたしました。')
+      lists.value.splice(index, 1)
+    }
+    if (error.value != null) {
+      alert('エラーにより削除できませんでした。')
+    }
+  }
+}
+
+const disabledCheck = (author: string):Boolean => {
+  let checkData = localStorage.getItem('userName')
+  return author === checkData ? false : true
 }
 
 onMounted(() => {

@@ -36,7 +36,7 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <span>mail:</span> <a :href="`mailto:${user['user-mail']}`">{{user['user-mail']}}</a> <span>create date:</span> {{dateAction(user.createdAt)}} &nbsp; <span class="tag">Question</span>
+              <span>mail:</span> <a :href="`mailto:${user['user-mail']}`">{{user['user-mail']}}</a> <span>create date:</span> {{dateAction(user.createdAt)}}
             </p>
           </div>
         </div>
@@ -65,6 +65,13 @@ definePageMeta({
   middleware: ['auth']
 })
 
+useHead({
+  title: 'Members | MEMO',
+  meta: [
+    { name: 'description', content: 'This page allows you to see the list of users.'}
+  ]
+})
+
 const dateAction = (date: string):string => {
   return $dayjs(date).format('YYYY.MM.DD')
 }
@@ -85,8 +92,10 @@ const params = {
   offset: pager.value
 }
 
+let now = new Date()
+
 const { data: user, error } = await useAsyncData(
-  'mountains',
+  String(now.getTime()),
   () => $fetch(apiUrl, {
     method: 'GET',
     headers: headers,
@@ -112,7 +121,6 @@ let loadingStyle = {
   'justify-content': 'center',
   'padding': '40px 0 0'
 }
-let now = new Date()
 
 const searchKeyword = ref<string>('')
 

@@ -2,7 +2,7 @@
   <div class="columns" id="mail-app">
     <aside class="column is-2 aside">
       <div class="column">
-        <p class="menu-label">Administration</p>
+        <p class="menu-label">{{dateAction(today)}}</p>
         <ul class="menu-list">
           <li>
             <div>Menu</div>
@@ -15,6 +15,9 @@
               </li>
               <li>
                 <NuxtLink to="/members/">Members</NuxtLink>
+              </li>
+              <li>
+                <a @click="accountGo">My Account</a>
               </li>
               <li><a @click="signOut">Log Out</a></li>
             </ul>
@@ -29,7 +32,7 @@
             <div class="container">
               <h1 class="title">Hello {{loginName}}</h1>
               <h2 class="subtitle">
-                  Let's write notes!
+                  Let's write a note!
               </h2>
             </div>
           </div>
@@ -44,36 +47,52 @@ import { ref, onMounted } from "vue"
 import { userMailStore } from "@/store/mail"
 const config = useRuntimeConfig()
 const router = useRouter()
+const { $dayjs } = useNuxtApp()
 const { userMail, signOut } = useAuth()
+
+const dateAction = (date: string):string => {
+  return $dayjs(date).format('YYYY.MM.DD')
+}
 
 const apiUrl = config.MEMBERS_URL
 
+const headers = {
+  'Content-Type': 'application/json',
+  'X-MICROCMS-API-KEY': config.MICROCMS_KEY
+}
+
+let now = new Date()
+
+if (localStorage.getItem('userMail') === null || localStorage.getItem('userMail') === 'undefined') {
+  router.push({ path: '/login' })
+}
+
+let mail = ref<string>('')
+mail.value = localStorage.getItem('userMail')
 const { data: user } = await useAsyncData(
-  'mountains',
+  String(now.getTime()),
   () => $fetch(apiUrl, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-MICROCMS-API-KEY': config.MICROCMS_KEY
-    },
+    headers: headers,
     params: {
       limit: 1,
-      filters: `user-mail[equals]${userMail.value}`
+      filters: `user-mail[equals]${mail.value}`
     }
   })
 )
+
+const today = new Date()
 const loginName = ref<string>('')
+const loginId = ref<string>('')
+
+const accountGo = () => {
+  router.push({ path: `/my-account/${loginId.value}` })
+}
+
 onMounted(() => {
-  if (!userMail.value) {
-    if (localStorage.getItem('userName') === null || localStorage.getItem('userName') === 'undefined') {
-      router.push({ path: '/login' })
-    } else {
-      loginName.value = localStorage.getItem('userName')
-    }
-  } else {
-    loginName.value = user.value.contents[0]['user-name']
-    localStorage.setItem('userName', loginName.value)
-  }
+  loginId.value = user.value.contents[0]['id']
+  loginName.value = user.value.contents[0]['user-name']
+  localStorage.setItem('userName', loginName.value)
 })
 </script>
 <style lang="scss">
@@ -144,5 +163,6 @@ aside {
 }
 .navbar-item {
   padding: 0;
+  align-items: start;
 }
 </style>
