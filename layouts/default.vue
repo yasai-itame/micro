@@ -16,10 +16,6 @@
               <li>
                 <NuxtLink to="/members/">Members</NuxtLink>
               </li>
-              <li>
-                <NuxtLink :to="`/my-account/${loginId}`">My Account</NuxtLink>
-                <!-- <a @click="accountGo">My Account</a> -->
-              </li>
               <li><a @click="signOut">Log Out</a></li>
             </ul>
           </li>
@@ -84,14 +80,8 @@ const { data: user } = await useAsyncData(
 
 const today = new Date()
 const loginName = ref<string>('')
-const loginId = ref<string>('')
-
-const accountGo = () => {
-  router.push({ path: `/my-account/${loginId.value}` })
-}
 
 onMounted(() => {
-  loginId.value = user.value.contents[0]['id']
   loginName.value = user.value.contents[0]['user-name']
   localStorage.setItem('userName', loginName.value)
 })

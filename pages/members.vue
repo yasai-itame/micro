@@ -30,7 +30,14 @@
   <div class="box content mt-5">
     <article v-for="user in users" :key="user.id" class="post">
       <h4>
-        {{user['user-name']}}
+        <template v-if="editCheck(user['user-name'])">
+          <NuxtLink :to="`/my-account/${user.id}`">
+            {{user['user-name']}}
+          </NuxtLink>
+        </template>
+        <template v-else>
+          {{user['user-name']}}
+        </template>
       </h4>
       <div class="media">
         <div class="media-content">
@@ -213,6 +220,14 @@ const allAction = async () => {
   }
   if (error.value != null) {
     alert('エラーにより読み込みできませんでした。')
+  }
+}
+
+const editCheck = (name: string):Boolean => {
+  if (name === localStorage.getItem('userName')) {
+    return true
+  } else {
+    return false
   }
 }
 
