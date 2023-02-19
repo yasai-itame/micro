@@ -17,7 +17,8 @@
                 <NuxtLink to="/members/">Members</NuxtLink>
               </li>
               <li>
-                <a @click="accountGo">My Account</a>
+                <NuxtLink :to="`/members/${loginId}`">Members</NuxtLink>
+                <!-- <a @click="accountGo">My Account</a> -->
               </li>
               <li><a @click="signOut">Log Out</a></li>
             </ul>
