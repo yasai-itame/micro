@@ -13,9 +13,9 @@
               <li>
                 <NuxtLink to="/create-memo/">Create Memo</NuxtLink>
               </li>
-              <li>
+              <!-- <li>
                 <NuxtLink :to="`/my-account/${loginId}`">My Account</NuxtLink>
-              </li>
+              </li> -->
               <li>
                 <NuxtLink to="/members/">Members</NuxtLink>
               </li>
