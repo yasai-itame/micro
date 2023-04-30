@@ -14,6 +14,9 @@
                 <NuxtLink to="/create-memo/">Create Memo</NuxtLink>
               </li>
               <li>
+                <NuxtLink :to="`/my-account/${loginId}`">My Account</NuxtLink>
+              </li>
+              <li>
                 <NuxtLink to="/members/">Members</NuxtLink>
               </li>
               <li><a @click="signOut">Log Out</a></li>
@@ -80,9 +83,11 @@ const { data: user } = await useAsyncData(
 
 const today = new Date()
 const loginName = ref<string>('')
+const loginId = ref<string>('')
 
 onMounted(() => {
   loginName.value = user.value.contents[0]['user-name']
+  loginId.value = user.value.contents[0]['id']
   localStorage.setItem('userName', loginName.value)
 })
 </script>

@@ -1,6 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { resolve } from 'path'
+import { createCommonJS } from 'mlly'
+const { __dirname } = createCommonJS(import.meta.url)
 export default defineNuxtConfig({
   ssr: false,
+  hooks: {
+    'pages:extend' (pages) {
+      pages.push({
+        name: 'my-account',
+        path: '/:catchall(.*)',
+        file: resolve(__dirname, 'pages/my-account/[id].vue')
+      })
+    }
+  },
   css: ['assets/scss/index.scss'],
   modules: [
     ['@pinia/nuxt',
