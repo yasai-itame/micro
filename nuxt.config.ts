@@ -35,7 +35,6 @@ export default defineNuxtConfig({
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID || '',
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || '',
     MICROCMS_KEY: process.env.MICROCMS_KEY || '',
-    /*
     public: {
       MICROCMS_URL: process.env.MICROCMS_URL,
       TO_DO_URL: process.env.TO_DO_URL,
@@ -48,6 +47,5 @@ export default defineNuxtConfig({
       FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || '',
       MICROCMS_KEY: process.env.MICROCMS_KEY || ''
     }
-    */
   }
 })
